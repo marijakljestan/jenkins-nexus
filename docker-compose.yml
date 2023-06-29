@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  nexus:
+    build:
+      context: nexus/
+      args:
+        NEXUS_VERSION: $NEXUS_VERSION
+    restart: always
+    container_name: nexus
+    volumes:
+    - nexus_data:/nexus-data
+    ports:
+      - "8088:8081"
+      - "8082:8082" 
+    networks:
+      - jenkins
+
+  jenkins:
+    build:
+      context: jenkins/
+      args:
+        JENKINS_VERSION: $JENKINS_VERSION
+    restart: always
+    container_name: jenkins
+    mem_limit: "2g"
+    mem_reservation: "1g"    
+    ports:
+      - "8090:8080" 
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+    - jenkins_data:/var/jenkins_home
+    networks:
+      - jenkins
+    
+
+  gitlab:
+    image: 'gitlab/gitlab-ce:latest'
+    restart: always
+    hostname: 'localhost'
+    container_name: gitlab-ce
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'http://localhost'
+    ports:
+      - '8080:80'
+      - '8443:443'
+    volumes:
+      - '$GITLAB_HOME/config:/etc/gitlab'
+      - '$GITLAB_HOME/logs:/var/log/gitlab'
+      - '$GITLAB_HOME/data:/var/opt/gitlab'
+    networks:
+      - jenkins
+
+volumes:
+  nexus_data:
+  jenkins_data:    
+
+networks:
+  jenkins:
+    name: jenkins-network

@@ -1,0 +1,5 @@
+gitlab/
+gitlab-jenkins-token
+gitlab-token-for-jenkins
+.env
+.vscode/
