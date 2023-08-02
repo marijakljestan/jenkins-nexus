@@ -16,13 +16,6 @@ pipeline {
                 }
             }
         }
-        stage('build') {
-            steps {
-                script {
-                    groovy_script.buildApp()
-                }
-            }
-        }
         stage('test') {
             steps {
                 script {

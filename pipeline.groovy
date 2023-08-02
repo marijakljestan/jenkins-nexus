@@ -2,14 +2,6 @@ def checkoutRepository(){
     git credentialsId: 'username-password-token', url: "${GITLAB_PROTOCOL}://${GITLAB_USERNAME}:${GITLAB_TOKEN}@${GITLAB_HOST_URL}/${GITLAB_REPOSITORY}"
 }
 
-def buildApp(){
-    withEnv(["PATH=${tool 'go1.20.5'}/bin:${env.PATH}"]) {
-        echo 'Building golang app'
-        sh "go version"
-        sh "go build server/main.go"
-    }
-}
-
 def testApp(){
     echo 'Tests passed successfully'
 }
